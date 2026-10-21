@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: MechAgent - Agentic AI predictive maintenance for bearings
+
+Parameters:
+  DataBucketName: {Type: String, Description: Existing S3 bucket (data, models, manuals)}
+  EndpointName: {Type: String, Default: mechagent-endpoint}
+  BedrockModelId: {Type: String, Default: us.amazon.nova-pro-v1:0}
+  AlertEmail: {Type: String}
+  ApprovalSecret: {Type: String, NoEcho: true, MinLength: 16}
+  TelegramBotToken: {Type: String, Default: "", NoEcho: true}
+  TelegramChatId: {Type: String, Default: ""}
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Architectures: [arm64]
+    Timeout: 300
+    MemorySize: 512
+
+Resources:
+  MechTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - {AttributeName: pk, AttributeType: S}
+        - {AttributeName: sk, AttributeType: S}
+      KeySchema:
+        - {AttributeName: pk, KeyType: HASH}
+        - {AttributeName: sk, KeyType: RANGE}
+
+  AlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - {Protocol: email, Endpoint: !Ref AlertEmail}
+
+  AgentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-agent
+      CodeUri: agent/
+      Handler: handler.lambda_handler
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref MechTable
+          BUCKET: !Ref DataBucketName
+          ENDPOINT_NAME: !Ref EndpointName
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+          TOPIC_ARN: !Ref AlertTopic
+          APPROVAL_SECRET: !Ref ApprovalSecret
+          TELEGRAM_BOT_TOKEN: !Ref TelegramBotToken
+          TELEGRAM_CHAT_ID: !Ref TelegramChatId
+          SELF_FUNCTION_NAME: !Sub ${AWS::StackName}-agent
+      Policies:
+        - DynamoDBCrudPolicy: {TableName: !Ref MechTable}
+        - S3CrudPolicy: {BucketName: !Ref DataBucketName}
+        - SNSPublishMessagePolicy: {TopicName: !GetAtt AlertTopic.TopicName}
+        - Statement:
+            - Effect: Allow
+              Action: sagemaker:InvokeEndpoint
+              Resource: !Sub arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:endpoint/${EndpointName}
+            - Effect: Allow
+              Action: [bedrock:InvokeModel, bedrock:InvokeModelWithResponseStream]
+              Resource: "*"
+            - Effect: Allow
+              Action: lambda:InvokeFunction
+              Resource: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${AWS::StackName}-agent
+      Events:
+        Analyze: {Type: HttpApi, Properties: {Path: /analyze, Method: POST}}
+        Report: {Type: HttpApi, Properties: {Path: /reports/{job_id}, Method: GET}}
+        ApproveGet: {Type: HttpApi, Properties: {Path: /approve, Method: GET}}
+        ApprovePost: {Type: HttpApi, Properties: {Path: /approve, Method: POST}}
+
+Outputs:
+  ApiUrl: {Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"}
+  TableName: {Value: !Ref MechTable}
+  

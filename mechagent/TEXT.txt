@@ -1,0 +1,26 @@
+mechagent/
+├── README.md
+├── requirements.txt
+├── template.yaml              # AWS SAM: API Gateway + Lambda + DynamoDB + SNS
+├── src/                       # ML pipeline (ใช้ทั้ง local และ SageMaker)
+│   ├── requirements.txt
+│   ├── mech_config.py
+│   ├── bearing_physics.py     # ฟิสิกส์ตลับลูกปืน + envelope analysis
+│   ├── simulate.py            # [1] Simulation dataset
+│   ├── dataset.py
+│   ├── mtl_model.py           # Multitask model (HF backbone)
+│   ├── train.py               # [2] Fine-tuning
+│   ├── inference.py           # [3] Inference + SageMaker handlers
+│   └── pipeline.py            # รัน 1→2→3→4 ครบในคำสั่งเดียว
+├── agent/                     # Lambda (ใช้แค่ stdlib + boto3)
+│   ├── report.py              # [4] Generate รายงาน
+│   ├── tools.py               # เครื่องมือของ Agent
+│   ├── agent_core.py          # Bedrock Converse tool-use loop
+│   └── handler.py             # Lambda entrypoint + Gatekeeper + Approval
+├── aws/
+│   ├── sagemaker_train.py     # Training Job + Deploy Endpoint
+│   └── seed_data.py           # ข้อมูลเครื่องจักร/อะไหล่/คู่มือ
+└── demo/
+    ├── client.py              # CLI demo
+    └── dashboard.py           # Streamlit dashboard
+

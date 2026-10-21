@@ -1,0 +1,10 @@
+numpy>=1.24
+scipy>=1.10
+torch>=2.1
+transformers>=4.36,<5
+tqdm
+boto3
+sagemaker>=2.200,<3
+requests
+pandas
+streamlit>=1.30
