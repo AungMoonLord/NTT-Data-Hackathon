@@ -148,7 +148,7 @@ td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:n
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
 @media (max-width:820px){.two{grid-template-columns:1fr}}
 
-.roadmap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.roadmap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .rm{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--surface);min-width:0;display:flex;flex-direction:column;gap:6px}
 .rm .k{font-family:var(--f-mono);font-size:.78rem;color:var(--accent)}
 .rm b{font-family:var(--f-display);line-height:1.35}
@@ -181,13 +181,52 @@ section[id]{scroll-margin-top:56px}
 </header>
 
 <nav class="toc" aria-label="สารบัญ"><div class="in">
-  <a href="#overview">ภาพรวม</a><a href="#bearing">ลูกปืน 5 คลาส</a><a href="#data">ทำไมใช้ข้อมูลจำลอง</a>
+  <a href="#changes">อัปเดตล่าสุด</a><a href="#problem">ปัญหาและผู้ใช้</a><a href="#overview">ภาพรวม</a><a href="#bearing">ลูกปืน 5 คลาส</a><a href="#data">ทำไมใช้ข้อมูลจำลอง</a>
   <a href="#steps">ทีละขั้น</a><a href="#order">แกน Order</a><a href="#exams">ข้อสอบ</a>
-  <a href="#example">ตัวอย่างเหตุการณ์</a><a href="#llm">LLM</a><a href="#aws">ขึ้น AWS</a><a href="#limits">ข้อจำกัด</a>
-  <a href="#roadmap">ลำดับงาน</a><a href="#glossary">คำศัพท์</a>
+  <a href="#example">ตัวอย่างเหตุการณ์</a><a href="#safety">ความปลอดภัยของ AI</a><a href="#value">คุณค่าทางธุรกิจ</a><a href="#llm">LLM</a><a href="#aws">AWS</a>
+  <a href="#criteria">เกณฑ์คะแนน</a><a href="#demo">สคริปต์ demo</a><a href="#limits">ข้อจำกัด</a><a href="#roadmap">ลำดับงาน</a><a href="#glossary">คำศัพท์</a>
 </div></nav>
 
 <main>
+<!-- อัปเดต -->
+<section id="changes"><div class="wrap">
+  <div class="sec-head"><h2>อัปเดตล่าสุด: ปรับตามเกณฑ์คะแนนและกติกา AWS</h2>
+  <p>แผนหลักเหมือนเดิม ไม่มีอะไรถูกตัดออก มีแค่เพิ่มเข้าไปเพื่อเก็บคะแนนให้ครบทุกข้อ</p></div>
+  <div class="callout sig"><b>เปลี่ยน 1 อย่าง:</b> AWS จากเดิม "ทำทีหลังถ้ามีเวลา" กลายเป็น <b>ข้อบังคับ</b> เพราะเกณฑ์ข้อ 03 กำหนดให้ deploy รอบสุดท้ายบน AWS และต้องแสดงว่าประหยัดค่าใช้จ่าย ลำดับงานยังเหมือนเดิม คือทำในเครื่องให้ดีก่อน แล้วค่อยขึ้น AWS</div>
+  <div class="tbl" style="margin-top:16px"><table>
+    <thead><tr><th>ส่วนในแผน</th><th>เพิ่มอะไร</th><th>เกณฑ์</th></tr></thead>
+    <tbody>
+      <tr><td>⑦ Agent</td><td>เขียน <b>แผนงานก่อนลงมือ</b> และบันทึกทุกขั้น (คิดอะไร เรียกเครื่องมือไหน ได้ผลอะไร)</td><td class="num">02</td></tr>
+      <tr><td>⑦ Agent</td><td><b>Guardrails</b> ห้ามสั่งหยุดเครื่องเอง ห้ามสั่งซื้อหรือส่งงานโดยไม่มีคนอนุมัติ</td><td class="num">04</td></tr>
+      <tr><td>⑦ Agent</td><td><b>Disclaimer</b> ท้ายรายงานทุกฉบับ</td><td class="num">04</td></tr>
+      <tr><td>⑧ อนุมัติ</td><td><b>Audit log</b> บันทึกว่าใครทำอะไร เมื่อไหร่</td><td class="num">04</td></tr>
+      <tr><td>⑨ Dashboard</td><td>แท็บ <b>"Agent คิดอะไร"</b> โชว์แผน เครื่องมือที่เรียก ผลค้นคู่มือ และรายงาน</td><td class="num">02 · 05</td></tr>
+      <tr><td>⑨ Dashboard</td><td>หน้า <b>คุณค่าทางธุรกิจ</b> (ก่อน/หลัง) และ <b>ค่าใช้จ่าย LLM ต่อเหตุการณ์</b></td><td class="num">03 · 06</td></tr>
+      <tr><td>AWS</td><td>ช่วงงานใหม่: deploy แบบ serverless และแสดงค่าใช้จ่ายจริง</td><td class="num">03</td></tr>
+      <tr><td>เอกสาร</td><td>Problem statement · User persona · สคริปต์ demo</td><td class="num">01 · 05</td></tr>
+    </tbody></table></div>
+</div></section>
+
+<!-- ปัญหา -->
+<section id="problem"><div class="wrap">
+  <div class="sec-head"><h2>ปัญหาและผู้ใช้</h2><p>ร่างแรกสำหรับทีม ปรับถ้อยคำและตัวเลขได้ ตัวเลขที่เป็นสมมติฐานติดป้ายไว้</p></div>
+  <h3>Problem statement</h3>
+  <div class="stack" style="margin-top:10px">
+    <p>ลูกปืนเป็นสาเหตุอันดับต้นของมอเตอร์และปั๊มเสีย งานสำรวจที่อ้างอิงกันบ่อย (IEEE / EPRI) พบว่าราว 40% ของมอเตอร์ที่เสียเกิดจากลูกปืน</p>
+    <p>โรงงานขนาดกลางส่วนใหญ่ยังตรวจลูกปืนด้วยการเดินฟังเสียงหรือวัดการสั่นเดือนละครั้ง ความเสียหายที่เริ่มระหว่างรอบตรวจจึงมักถูกพบเมื่อเครื่องหยุดกะทันหันแล้ว เมื่อพบปัญหา หัวหน้ายังต้องเช็คเครื่องสำรอง อะไหล่ ตารางผลิต และหาคู่มือเองก่อนสั่งงาน ซึ่งใช้เวลาหลายชั่วโมง</p>
+    <div class="callout"><b>MechAgent</b> ตรวจการสั่นตลอดเวลา บอกว่าเสียตรงไหนและเหลือเวลาเท่าไหร่ แล้วให้ Agent เตรียมรายงานและใบสั่งงานพร้อมขั้นตอนให้ช่าง ภายในไม่กี่นาที โดยคนเป็นผู้อนุมัติทุกครั้ง</div>
+  </div>
+  <h3 style="margin-top:28px">User persona</h3>
+  <div class="classes" style="margin-top:10px">
+    <div class="cls"><b>หัวหน้ากะซ่อมบำรุง</b><span class="o">ผู้อนุมัติ</span><span><b>ปัญหา:</b> ต้องรวบรวมข้อมูลจากหลายระบบก่อนตัดสินใจ รู้ตัวช้าเมื่อเครื่องเริ่มเสีย</span><span><b>ได้อะไร:</b> รายงานพร้อมหลักฐานใน Telegram กดอนุมัติได้ทันที</span></div>
+    <div class="cls"><b>ช่างซ่อมบำรุง</b><span class="o">ผู้ลงมือ</span><span><b>ปัญหา:</b> ได้รับงานแบบไม่มีรายละเอียด ต้องเดาว่าต้องเตรียมอะไร</span><span><b>ได้อะไร:</b> ขั้นตอนตรวจ แก้ไขเบื้องต้น อะไหล่ และข้อควรระวังด้านความปลอดภัย</span></div>
+    <div class="cls"><b>ผู้จัดการโรงงาน</b><span class="o">ผู้รับเรื่องที่ถูกส่งต่อ</span><span><b>ปัญหา:</b> เครื่องหยุดกะทันหันกระทบแผนผลิตและค่าใช้จ่าย</span><span><b>ได้อะไร:</b> ได้รับแจ้งอัตโนมัติเมื่อเรื่องวิกฤตไม่มีคนรับ และเห็นตัวเลขคุณค่าที่ระบบสร้าง</span></div>
+  </div>
+  <h3 style="margin-top:28px">Workflow แบบง่าย</h3>
+  <div class="flow" style="margin-top:10px">เซนเซอร์สั่น → AI ตรวจ (เสียตรงไหน + เหลือเท่าไหร่) → Agent เตรียมรายงาน
+   → หัวหน้าอนุมัติใน Telegram → ช่างได้ขั้นตอน → บันทึก audit log</div>
+</div></section>
+
 <!-- ภาพรวม -->
 <section id="overview"><div class="wide">
   <div class="wrap sec-head" style="margin-left:0">
@@ -386,6 +425,15 @@ section[id]{scroll-margin-top:56px}
     <article class="step llm">
       <div class="step-h"><span class="num">7</span><h3>Agent เขียนรายงาน <span class="tag llm" style="vertical-align:middle">ใช้ LLM</span></h3></div>
       <p class="why">Agent ไม่ได้เดินตามสคริปต์ มันเลือกเองว่าจะเรียกเครื่องมือไหนต่อ ตามข้อมูลที่ได้ในแต่ละรอบ</p>
+      <div>
+        <b>วิธีทำงาน: วางแผน → ลงมือ → สรุป</b>
+        <div class="flow" style="margin-top:6px">1. รับเหตุการณ์จาก Gatekeeper
+2. เขียนแผนงาน   "ต้องรู้: เครื่องสำรอง · อะไหล่ · ช่วงหยุดได้ · วิธีแก้"
+3. เรียกเครื่องมือทีละตัว อ่านผล แล้วตัดสินใจขั้นถัดไป (ปรับแผนได้)
+4. ค้นคู่มือ (RAG) ตามชนิดความเสียหาย
+5. ส่งรายงาน → ระบบตรวจรูปแบบ → ส่งให้หัวหน้าอนุมัติ</div>
+        <p style="margin-top:8px">ทุกขั้นถูกบันทึกเป็น <b>trace</b> (แผน · เครื่องมือที่เรียก · ข้อมูลที่ส่ง · ผลที่ได้ · ข้อความจากคู่มือที่ค้นเจอ) แล้วแสดงในแท็บ "Agent คิดอะไร" บน Dashboard ให้กรรมการเห็นว่า Agent คิดเองจริง</p>
+      </div>
       <div class="tbl"><table>
         <thead><tr><th>เครื่องมือ</th><th>ใช้ทำอะไร</th></tr></thead>
         <tbody>
@@ -402,7 +450,19 @@ section[id]{scroll-margin-top:56px}
         <li><b>LLM ตอบผิดรูปแบบ</b> → ระบบตรวจแล้วให้แก้ ถ้ายังผิดใช้ตัวเขียนสำรองแทน demo จึงไม่พังกลางคัน</li>
         <li><b>LLM วนไม่จบ</b> → จำกัดไม่เกิน 10 รอบ</li>
         <li><b>หลักฐานอ่อน</b> → รายงานใช้คำว่า "สงสัย" และไม่สั่งซื้ออะไหล่</li>
+        <li><b>Agent ทำเกินหน้าที่</b> → guardrails: เครื่องมือของ Agent ทำได้แค่อ่านข้อมูลและ <i>ร่าง</i> เอกสาร ไม่มีเครื่องมือหยุดเครื่องหรือส่งคำสั่งซื้อจริง (ดู <a href="#safety">ความปลอดภัยของ AI</a>)</li>
       </ul></div>
+      <div>
+        <b>RAG และ custom chunking</b>
+        <p style="margin-top:4px">คู่มือถูกตัดเป็นชิ้นตาม <b>หัวข้อ</b> ไม่ใช่ตัดตามจำนวนตัวอักษร ทุกชนิดความเสียหายมีหัวข้อเดียวกัน ทำให้ค้นเจอส่วนที่ต้องใช้ตรงจุด</p>
+        <div class="flow" style="margin-top:6px">คู่มือรางนอก
+ ├─ สาเหตุที่พบบ่อย
+ ├─ ตรวจยืนยันทันที      ← Agent ค้นส่วนนี้ไปใส่ "ตรวจยืนยัน"
+ ├─ แก้ไขเบื้องต้น        ← ไปใส่ "แก้ไขเบื้องต้น (ทำวันนี้)"
+ ├─ ซ่อมถาวร
+ └─ ความเร่งด่วน</div>
+        <p style="margin-top:6px">ตัวค้นใช้ TF-IDF แบบตัวอักษรต่อเนื่อง (character n-gram) ซึ่งรองรับภาษาไทยที่ไม่มีเว้นวรรคระหว่างคำ และรันได้โดยไม่ต้องดาวน์โหลดโมเดลหรือเปิดฐานข้อมูลเพิ่ม</p>
+      </div>
     </article>
 
     <article class="step">
@@ -416,12 +476,23 @@ section[id]{scroll-margin-top:56px}
         <li><b>ไม่มีใครกด</b> → ส่งต่อผู้จัดการอัตโนมัติ: <span class="pill p-crit">วิกฤต 15 นาที</span> <span class="pill p-warn">สูง 60 นาที</span> <span class="pill p-info">ปานกลาง 4 ชั่วโมง</span></li>
         <li><b>กรณีวิกฤต</b> → ส่งคำเตือนความปลอดภัยให้ช่างทันที โดยไม่รออนุมัติ</li>
         <li><b>ยังไม่ได้ตั้ง Telegram</b> → แสดงในหน้าจอคอมแทน demo ได้เลย</li>
+        <li><b>ตรวจย้อนหลังไม่ได้</b> → audit log บันทึกทุกเหตุการณ์ (ตรวจพบ · Agent เรียกเครื่องมือ · ส่งรายงาน · ใครกดอะไร · ส่งต่อใคร) พร้อมเวลา</li>
       </ul></div>
     </article>
 
     <article class="step">
       <div class="step-h"><span class="num">9</span><h3>Dashboard</h3></div>
-      <p>หน้าเว็บในเครื่อง (Streamlit) ดูผลข้อสอบ กราฟสัญญาณ กราฟทำนายอายุ รายงานของ Agent และรายการรออนุมัติ</p>
+      <p>หน้าเว็บในเครื่อง (Streamlit) สำหรับโชว์กรรมการและให้ทีมดูผล</p>
+      <div class="tbl"><table>
+        <thead><tr><th>แท็บ</th><th>แสดงอะไร</th></tr></thead>
+        <tbody>
+          <tr><td>เครื่องจักร</td><td>สถานะแต่ละเครื่อง กราฟสัญญาณ กราฟสเปกตรัมพร้อมเส้นความถี่ความเสียหาย กราฟทำนายอายุ</td></tr>
+          <tr><td>Agent คิดอะไร</td><td>แผนงาน เครื่องมือที่เรียกทีละขั้น ผลค้นคู่มือ และรายงานสุดท้าย</td></tr>
+          <tr><td>รออนุมัติ</td><td>รายงานที่รอหัวหน้ากด และสถานะการส่งต่อ</td></tr>
+          <tr><td>ผลข้อสอบ</td><td>ความแม่นแต่ละคลาส ต่างความเร็ว ต่างรุ่น ตัวหลอก และกราฟ noise</td></tr>
+          <tr><td>คุณค่าและค่าใช้จ่าย</td><td>ตารางก่อน/หลัง ค่าใช้จ่าย LLM ต่อเหตุการณ์ และ token ที่ใช้</td></tr>
+          <tr><td>Audit log</td><td>ประวัติการกระทำทั้งหมด</td></tr>
+        </tbody></table></div>
     </article>
   </div>
 </div></section>
@@ -501,6 +572,50 @@ section[id]{scroll-margin-top:56px}
   </div>
 </div></section>
 
+<!-- Safety -->
+<section id="safety"><div class="wrap">
+  <div class="sec-head"><h2>ความปลอดภัยของ AI (Responsible AI)</h2><p>AI ช่วยเตรียมงาน แต่คนเป็นผู้ตัดสินใจเสมอ</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>เรื่อง</th><th>ทำอะไรในระบบ</th></tr></thead>
+    <tbody>
+      <tr><td><b>คนอนุมัติ</b></td><td>รายงานและใบสั่งงานทุกฉบับต้องผ่านหัวหน้าก่อนถึงช่าง (ยกเว้นคำเตือนความปลอดภัยในกรณีวิกฤต ซึ่งเป็นแค่คำเตือน ไม่ใช่คำสั่งงาน)</td></tr>
+      <tr><td><b>Guardrails</b></td><td>
+        <ul class="clean">
+          <li>Agent มีแค่เครื่องมือ <i>อ่าน</i> ข้อมูลและ <i>ร่าง</i> เอกสาร ไม่มีเครื่องมือสั่งหยุดเครื่อง เปลี่ยนค่า SCADA หรือส่งคำสั่งซื้อจริง</li>
+          <li>จำกัดรอบการคิดไม่เกิน 10 รอบต่อเหตุการณ์</li>
+          <li>รายงานต้องผ่านการตรวจรูปแบบ ถ้าผิดใช้ตัวเขียนสำรอง</li>
+          <li>หลักฐานอ่อน → ใช้คำว่า "สงสัย" และสั่งตรวจก่อน ห้ามสั่งเปลี่ยนหรือซื้ออะไหล่</li>
+        </ul></td></tr>
+      <tr><td><b>Escalation</b></td><td>ไม่มีคนกดภายในเวลาที่กำหนด → ส่งต่อผู้จัดการอัตโนมัติ (วิกฤต 15 นาที · สูง 60 นาที · ปานกลาง 4 ชั่วโมง)</td></tr>
+      <tr><td><b>Disclaimer</b></td><td>ท้ายรายงานทุกฉบับ: <i>"รายงานนี้สร้างโดย AI เป็นคำแนะนำเบื้องต้น ผู้รับผิดชอบต้องตรวจสอบหน้างานก่อนดำเนินการ และปฏิบัติตามขั้นตอนความปลอดภัย (LOTO) ทุกครั้ง"</i></td></tr>
+      <tr><td><b>Audit trail</b></td><td>บันทึกทุกการกระทำพร้อมเวลา: ผลตรวจ · การปลุก Agent · เครื่องมือที่ Agent เรียก · รายงาน · ผู้อนุมัติหรือปฏิเสธ · การส่งต่อ (ในเครื่องเก็บเป็นไฟล์ บน AWS เก็บใน DynamoDB)</td></tr>
+      <tr><td><b>ความเป็นส่วนตัวของข้อมูล</b></td><td>ตอนพัฒนาใช้ LLM ในเครื่อง ข้อมูลไม่ออกไปข้างนอก · บน AWS ข้อมูลอยู่ในบัญชีของทีมใน region ที่อนุญาต · ส่งให้ LLM เฉพาะข้อมูลที่จำเป็น ไม่ส่งข้อมูลส่วนตัวของพนักงาน</td></tr>
+    </tbody></table></div>
+</div></section>
+
+<!-- Value -->
+<section id="value"><div class="wrap">
+  <div class="sec-head"><h2>คุณค่าทางธุรกิจ</h2><p>เปรียบเทียบก่อน/หลังใช้ MechAgent สำหรับปั๊ม 1 ตัวที่ลูกปืนเสีย 1 ครั้ง</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>ตัวชี้วัด</th><th>ก่อน (ตรวจตามรอบ)</th><th>หลัง (MechAgent)</th></tr></thead>
+    <tbody>
+      <tr><td>รู้ตัวว่าลูกปืนเริ่มเสีย</td><td>รอบตรวจถัดไป หรือเมื่อเครื่องหยุด</td><td>ภายในไม่กี่นาทีหลังสัญญาณผิดปกติต่อเนื่อง</td></tr>
+      <tr><td>ตรวจพบ → ใบสั่งงานพร้อมขั้นตอน</td><td class="num">2–4 ชม.</td><td class="num">≈ 5 นาที + เวลาที่หัวหน้ากด</td></tr>
+      <tr><td>ประเภทการหยุดเครื่อง</td><td>หยุดกะทันหัน</td><td>หยุดตามแผนในช่วงผลิตน้อย</td></tr>
+      <tr><td>เวลาเครื่องหยุด</td><td class="num">8 ชม.</td><td class="num">2 ชม.</td></tr>
+      <tr><td>ค่าเสียหายจากเครื่องหยุด (สมมติ 20,000 บาท/ชม.)</td><td class="num">160,000 บาท</td><td class="num">40,000 บาท</td></tr>
+    </tbody></table></div>
+  <div class="callout" style="margin-top:12px"><b>ตัวเลขทุกตัวในตารางนี้เป็นสมมติฐานเพื่อสาธิต</b> หน้าคุณค่าบน Dashboard จะให้กรอกตัวเลขของโรงงานเอง (ค่าเสียหายต่อชั่วโมง เวลาหยุด จำนวนครั้งต่อปี) แล้วคำนวณให้ ตอนนำเสนอควรบอกกรรมการว่าเป็นตัวเลขสมมติ</div>
+  <h3 style="margin-top:24px">Benchmark ที่วัดได้จริงจากระบบ</h3>
+  <ul class="clean" style="margin-top:8px">
+    <li>ความแม่นยำทายชนิดความเสียหาย (รวม และแยกต่างความเร็ว ต่างรุ่น)</li>
+    <li>อัตราแจ้งเตือนผิดจากตัวหลอก</li>
+    <li>ความคลาดเคลื่อนของการทำนายอายุ (ชั่วโมง)</li>
+    <li>ระดับ noise ที่ระบบยังแม่นยำเกินเกณฑ์ เช่น 90%</li>
+    <li>เวลาและค่าใช้จ่าย LLM ต่อเหตุการณ์ (token และดอลลาร์)</li>
+  </ul>
+</div></section>
+
 <!-- LLM -->
 <section id="llm"><div class="wrap">
   <div class="sec-head"><h2>LLM ที่ใช้</h2><p>เปลี่ยนได้ในไฟล์ <code>config.yaml</code> บรรทัดเดียว ไม่ต้องแก้โค้ด</p></div>
@@ -521,8 +636,8 @@ section[id]{scroll-margin-top:56px}
 
 <!-- AWS -->
 <section id="aws"><div class="wrap">
-  <div class="sec-head"><h2>ขึ้น AWS (ภายหลัง)</h2>
-  <p>ตอนนี้พัฒนาในเครื่องก่อน แผนด้านบนไม่เปลี่ยน ส่วนนี้คือกติกาของ Challenge และสิ่งที่โค้ดเตรียมไว้ล่วงหน้า เพื่อให้ยกขึ้น cloud ได้โดยไม่ต้องกลับมาแก้</p></div>
+  <div class="sec-head"><h2>ขึ้น AWS (บังคับในรอบสุดท้าย)</h2>
+  <p>เกณฑ์ข้อ 03 กำหนดให้ deploy รอบสุดท้ายบน AWS และแสดงว่าประหยัดค่าใช้จ่าย ทีมพัฒนาในเครื่องให้ดีก่อน แล้วค่อยยกขึ้น cloud โค้ดเตรียมไว้ล่วงหน้าเพื่อไม่ต้องกลับมาแก้</p></div>
 
   <h3>กติกาของ Challenge</h3>
   <div class="tbl" style="margin-top:10px"><table>
@@ -591,6 +706,14 @@ EventBridge Scheduler: ทุก 5 นาที เช็คว่าใคร�
     </tbody></table></div>
   <p style="margin-top:8px;color:var(--muted);font-size:.93rem">ตัวเลขเป็นการประมาณคร่าวๆ ต้องยืนยันใน AWS Pricing Calculator ก่อน deploy ตามที่ Challenge กำหนด</p>
 
+  <h3 style="margin-top:28px">แสดงความประหยัดให้กรรมการเห็น</h3>
+  <ul class="clean" style="margin-top:8px">
+    <li><b>Gatekeeper</b> กรองให้ LLM ทำงานเฉพาะตอนมีปัญหา โชว์ตัวเลข "วัด X ครั้ง ปลุก Agent Y ครั้ง"</li>
+    <li><b>ค่าใช้จ่ายต่อเหตุการณ์</b> ระบบนับ token ที่ใช้ แล้วแปลงเป็นดอลลาร์ แสดงบน Dashboard</li>
+    <li><b>Serverless ทั้งหมด</b> ไม่มีเครื่องเปิดทิ้งไว้ ไม่ใช้งานก็แทบไม่เสียเงิน</li>
+    <li><b>ภาพหน้าจอ</b> AWS Cost Explorer และลิงก์ Pricing Calculator ใส่ในสไลด์นำเสนอ</li>
+  </ul>
+
   <h3 style="margin-top:28px">เช็คลิสต์วันแรกที่ได้บัญชี AWS</h3>
   <ol class="clean" style="margin-top:8px">
     <li>ตั้ง Budget alarm ของทีมเองที่ <span class="mono">$50</span> และ <span class="mono">$100</span></li>
@@ -598,6 +721,37 @@ EventBridge Scheduler: ทุก 5 นาที เช็คว่าใคร�
     <li>ประเมินค่าใช้จ่ายใน AWS Pricing Calculator แล้วแชร์ลิงก์ให้ทีม</li>
     <li>ทุกครั้งที่เลิกงาน: ลบหรือปิดทรัพยากรที่ไม่ใช้ และดู Cost Explorer</li>
   </ol>
+</div></section>
+
+<!-- Criteria -->
+<section id="criteria"><div class="wrap">
+  <div class="sec-head"><h2>เกณฑ์คะแนน: เก็บแต่ละข้อด้วยอะไร</h2><p>เกณฑ์ 6 ข้อของ Digital Innovation Challenge เทียบกับหลักฐานที่โปรเจคจะมี</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>เกณฑ์</th><th>กรรมการมองหา</th><th>หลักฐานของเรา</th></tr></thead>
+    <tbody>
+      <tr><td class="num">01</td><td><b>Problem clarity</b><br><span style="color:var(--muted)">Problem statement, user persona, simple workflow</span></td><td>หัวข้อ <a href="#problem">ปัญหาและผู้ใช้</a> · persona 3 บทบาท · workflow 1 บรรทัด</td></tr>
+      <tr><td class="num">02</td><td><b>Agentic behavior</b><br><span style="color:var(--muted)">Visible task plan, tool/mock API call, RAG result, final output · RAG/custom chunking, use-case LLM</span></td><td>Agent เขียนแผนก่อนลงมือ · trace ทุกขั้นบน Dashboard · เครื่องมือ 7 ตัว (ระบบโรงงานจำลอง) · RAG ตัดตามหัวข้อ · รายงานที่ตรวจรูปแบบแล้ว</td></tr>
+      <tr><td class="num">03</td><td><b>Prototype completeness</b><br><span style="color:var(--muted)">Live demo, realistic mock/synthetic data, basic UI · Final: AWS + cost efficiency</span></td><td>ระบบครบ 9 ขั้น · ข้อมูลจำลองตามฟิสิกส์ · Dashboard + Telegram · deploy serverless บน AWS · ค่าใช้จ่ายต่อเหตุการณ์</td></tr>
+      <tr><td class="num">04</td><td><b>Responsible AI &amp; safety</b><br><span style="color:var(--muted)">Human approval, privacy, safe boundaries · guardrails, escalation, disclaimers, audit trail</span></td><td>หัวข้อ <a href="#safety">ความปลอดภัยของ AI</a> ครบทั้ง 6 เรื่อง</td></tr>
+      <tr><td class="num">05</td><td><b>Creativity &amp; UX</b><br><span style="color:var(--muted)">Clear UX, storytelling, practical workflow</span></td><td>ช่างได้ขั้นตอนใน Telegram ที่ใช้อยู่แล้ว · ปุ่มอนุมัติกดเดียว · <a href="#demo">สคริปต์ demo</a> เล่าเป็นเรื่อง</td></tr>
+      <tr><td class="num">06</td><td><b>Business or social value</b><br><span style="color:var(--muted)">Benefit statement, metric or before/after · optional benchmark/threshold</span></td><td>หัวข้อ <a href="#value">คุณค่าทางธุรกิจ</a> · ตารางก่อน/หลัง · benchmark จากข้อสอบ</td></tr>
+    </tbody></table></div>
+</div></section>
+
+<!-- Demo -->
+<section id="demo"><div class="wrap">
+  <div class="sec-head"><h2>สคริปต์ demo (ประมาณ 5 นาที)</h2><p>โครงร่างแรก ซ้อมแล้วปรับเวลาได้</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>เวลา</th><th>ฉาก</th><th>โชว์อะไร</th><th>เกณฑ์</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0:00</td><td>ปัญหา</td><td>ปั๊มหยุดกะทันหันเพราะลูกปืนเสีย ใครเดือดร้อน เสียหายเท่าไหร่</td><td class="num">01 · 06</td></tr>
+      <tr><td class="num">0:45</td><td>เครื่องเริ่มเสีย</td><td>Dashboard: สัญญาณของ P-101 เปลี่ยน กราฟสเปกตรัมเห็นยอดที่ 3.58 เท่า AI ทาย "รางนอก" ทำนายเหลือ 4–6 วัน</td><td class="num">03</td></tr>
+      <tr><td class="num">1:30</td><td>Agent ทำงาน</td><td>แท็บ "Agent คิดอะไร": แผนงาน → เช็คเครื่องสำรอง → อะไหล่ → ตารางผลิต → ค้นคู่มือ → รายงาน</td><td class="num">02</td></tr>
+      <tr><td class="num">2:30</td><td>หัวหน้าอนุมัติ</td><td>Telegram บนมือถือ: รายงานถึงหัวหน้า กดอนุมัติ ช่างได้ขั้นตอนทันที</td><td class="num">04 · 05</td></tr>
+      <tr><td class="num">3:15</td><td>เคสวิกฤต</td><td>กรงเสีย: คำเตือนความปลอดภัยถึงช่างทันที ไม่มีคนกด → ส่งต่อผู้จัดการ · โชว์ audit log</td><td class="num">04</td></tr>
+      <tr><td class="num">4:00</td><td>พิสูจน์ผล</td><td>ผลข้อสอบต่างความเร็ว ต่างรุ่น ตัวหลอก · ตารางก่อน/หลัง · ค่าใช้จ่ายต่อเหตุการณ์บน AWS</td><td class="num">03 · 06</td></tr>
+      <tr><td class="num">4:45</td><td>สรุป</td><td>ข้อจำกัดที่รู้ และแผนต่อยอด</td><td class="num">04</td></tr>
+    </tbody></table></div>
 </div></section>
 
 <!-- ข้อจำกัด -->
@@ -618,8 +772,10 @@ EventBridge Scheduler: ทุก 5 นาที เช็คว่าใคร�
     <div class="rm"><span class="k">ช่วง 1</span><b>ตัวจำลอง</b><span>พร้อมรูปตรวจว่าสัญญาณสมจริง · ทีมดูรูปก่อนไปต่อ</span></div>
     <div class="rm"><span class="k">ช่วง 2</span><b>เตรียมสัญญาณ + AI + ข้อสอบ</b><span>ทีมดูผลข้อสอบ</span></div>
     <div class="rm"><span class="k">ช่วง 3</span><b>ทำนายอายุ</b><span>ทดสอบกับลูกปืนจำลองที่เสียจนพัง</span></div>
-    <div class="rm"><span class="k">ช่วง 4</span><b>Agent · Telegram · อนุมัติ · Dashboard</b><span>ปรับจากส่วนที่ทดสอบผ่านแล้วให้รองรับ 5 คลาส</span></div>
-    <div class="rm"><span class="k">ช่วง 5</span><b>รวมระบบ + README</b><span>รันทั้งระบบ ทดสอบ ส่งเป็นไฟล์ zip</span></div>
+    <div class="rm"><span class="k">ช่วง 4</span><b>Agent · Telegram · อนุมัติ · Dashboard</b><span>รองรับ 5 คลาส + แผนงาน trace guardrails audit log หน้าคุณค่า</span></div>
+    <div class="rm"><span class="k">ช่วง 5</span><b>รวมระบบ + README</b><span>รันทั้งระบบในเครื่อง ทดสอบ ส่งเป็นไฟล์ zip</span></div>
+    <div class="rm"><span class="k">ช่วง 6 · ใหม่</span><b>ขึ้น AWS</b><span>deploy serverless · ทดสอบ Claude/Nova · โชว์ค่าใช้จ่าย</span></div>
+    <div class="rm"><span class="k">คู่ขนาน · ใหม่</span><b>เอกสารนำเสนอ</b><span>problem statement · persona · สคริปต์ demo · สไลด์</span></div>
   </div>
   <div class="wrap" style="margin:20px 0 0">
     <h3>คำสั่งที่จะใช้</h3>
@@ -647,6 +803,11 @@ python -m mechagent all        # รันทุกอย่างในคำ�
     <dt>RAG</dt><dd>ให้ LLM ค้นคู่มือก่อนตอบ แทนการตอบจากความจำ</dd>
     <dt>LOTO</dt><dd>Lockout/Tagout ตัดพลังงาน ล็อก และติดป้าย ก่อนทำงานกับเครื่อง</dd>
     <dt>Ollama</dt><dd>โปรแกรมฟรีสำหรับรัน LLM ในเครื่องตัวเอง</dd>
+    <dt>Trace</dt><dd>บันทึกทุกขั้นที่ Agent คิดและทำ ใช้แสดงให้เห็นว่า Agent ตัดสินใจยังไง</dd>
+    <dt>Guardrails</dt><dd>ขอบเขตที่ห้าม AI ทำ เช่น ห้ามสั่งหยุดเครื่องเอง</dd>
+    <dt>Audit log</dt><dd>ประวัติการกระทำทั้งหมดพร้อมเวลา ตรวจย้อนหลังได้</dd>
+    <dt>Webhook</dt><dd>ให้ระบบอื่น (เช่น Telegram) ส่งข้อมูลมาหาเราเองเมื่อมีเหตุการณ์</dd>
+    <dt>Serverless</dt><dd>บริการ cloud ที่คิดเงินตามการใช้จริง ไม่ต้องเปิดเครื่องทิ้งไว้</dd>
   </dl>
 </div></section>
 </main>
