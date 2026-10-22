@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MechAgent | NTT DATA Hackathon Presentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Sarabun', 'Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            primary: '#0284c7',
+            accent: '#38bdf8',
+            darkbg: '#090d16',
+            cardbg: '#111827',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #090d16;
+      color: #f3f4f6;
+      font-family: 'Sarabun', 'Inter', sans-serif;
+    }
+    .slide {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem 4rem;
+      border-bottom: 2px dashed #1f2937;
+      position: relative;
+      background: radial-gradient(circle at top right, rgba(14, 165, 233, 0.08), transparent 40%),
+                  radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.05), transparent 40%),
+                  #090d16;
+    }
+    .kpi-stat-box {
+      background: rgba(17, 24, 39, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .badge-blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-green { background: rgba(52, 211, 153, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+    .badge-orange { background: rgba(251, 146, 60, 0.15); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
+    .badge-purple { background: rgba(192, 132, 252, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); }
+
+    /* Print styles for Clean PDF Export */
+    @media print {
+      body { background: #ffffff !important; color: #111827 !important; }
+      .no-print, .nav-floating { display: none !important; }
+      .slide {
+        min-height: 100vh !important;
+        height: 100vh !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        padding: 2.5rem 3rem !important;
+        border-bottom: none !important;
+        background: #ffffff !important;
+        color: #111827 !important;
+      }
+      .slide * { color: #111827 !important; }
+      .kpi-stat-box {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+      }
+      .kpi-stat-box * { color: #111827 !important; }
+      .text-slate-400 { color: #475569 !important; }
+      .text-slate-300 { color: #334155 !important; }
+      .text-cyan-400, .text-sky-400 { color: #0284c7 !important; }
+      .text-emerald-400 { color: #059669 !important; }
+      .text-rose-400 { color: #e11d48 !important; }
+      .badge-blue { background: #e0f2fe !important; color: #0369a1 !important; border-color: #bae6fd !important; }
+      .badge-green { background: #d1fae5 !important; color: #047857 !important; border-color: #a7f3d0 !important; }
+      .badge-orange { background: #ffedd5 !important; color: #c2410c !important; border-color: #fed7aa !important; }
+      table { border-color: #cbd5e1 !important; }
+      th { background-color: #f1f5f9 !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+      td { border-color: #e2e8f0 !important; color: #334155 !important; }
+    }
+  </style>
+</head>
+<body class="selection:bg-cyan-500 selection:text-white">
+
+  <!-- ================= FLOATING CONTROL BAR ================= -->
+  <div class="nav-floating fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-slate-900/90 backdrop-blur border border-slate-700/80 px-4 py-2.5 rounded-full shadow-2xl">
+    <div class="text-xs text-slate-300 font-mono font-medium">
+      <span id="slide-num">Slide 1</span> / 7
+    </div>
+    <div class="h-4 w-px bg-slate-700"></div>
+    <button onclick="prevSlide()" class="p-1.5 rounded-full hover:bg-slate-800 text-slate-300 hover:text-white transition" title="สไลด์ก่อนหน้า (Arrow Left)">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <button onclick="nextSlide()" class="p-1.5 rounded-full hover:bg-slate-800 text-slate-300 hover:text-white transition" title="สไลด์ถัดไป (Arrow Right)">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <div class="h-4 w-px bg-slate-700"></div>
+    <button onclick="window.print()" class="flex items-center gap-1.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow transition" title="พิมพ์หรือบันทึกเป็น PDF สำหรับการนำเสนอ">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+      <span>Export PDF</span>
+    </button>
+  </div>
+
+  <!-- ================= SLIDE 1: TITLE SLIDE ================= -->
+  <section class="slide" id="slide-1">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">⚙️</span>
+        <span class="font-mono text-sm tracking-widest text-slate-400 uppercase">NTT DATA HACKATHON 2026</span>
+      </div>
+      <div class="flex gap-2">
+        <span class="badge badge-green font-mono">100% Serverless</span>
+        <span class="badge badge-blue font-mono">ap-southeast-1</span>
+      </div>
+    </div>
+
+    <div class="max-w-4xl my-auto space-y-6">
+      <div class="inline-block">
+        <span class="badge badge-orange font-mono mb-2">Predictive Maintenance • Industry 4.0</span>
+      </div>
+      <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight bg-gradient-to-r from-sky-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">
+        MechAgent
+      </h1>
+      <p class="text-2xl md:text-3xl font-semibold text-slate-200 leading-snug">
+        Physics-Informed Agentic Predictive Maintenance
+      </p>
+      <p class="text-lg text-slate-400 max-w-3xl leading-relaxed">
+        เปลี่ยนข้อมูลการสั่นสะเทือนสู่การตัดสินใจซ่อมบำรุงที่แม่นยำ ไร้การคาดเดา ด้วยพลังโครงข่ายประสาทเทียม Multi-Task Learning ผสานสูตรฟิสิกส์ Envelope Spectrum และสถาปัตยกรรม Serverless First เต็มรูปแบบบน AWS
+      </p>
+
+      <div class="pt-4 flex flex-wrap gap-4 text-xs font-mono">
+        <div class="kpi-stat-box">
+          <div class="text-slate-400">Zero Hallucination</div>
+          <div class="text-lg font-bold text-sky-400">Pure Physics + MTL</div>
+        </div>
+        <div class="kpi-stat-box">
+          <div class="text-slate-400">Safety Deadline</div>
+          <div class="text-lg font-bold text-rose-400">Worst-case P05</div>
+        </div>
+        <div class="kpi-stat-box">
+          <div class="text-slate-400">Monthly AWS Cost</div>
+          <div class="text-lg font-bold text-emerald-400">~$2.39 / เดือน (&lt;1% Budget)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-end border-t border-slate-800 pt-4 text-xs text-slate-500 font-mono">
+      <div>Project: MechAgent AI • Team Autonomous Reliability</div>
+      <div>Live: https://d38e5nijdx3gmh.cloudfront.net</div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 2: PAIN POINT & USE CASE ================= -->
+  <section class="slide" id="slide-2">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+      <div>
+        <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider">01 • Problem Statement</span>
+        <h2 class="text-2xl font-bold text-white">Use Case & Pain Points ในโรงงานอุตสาหกรรม</h2>
+      </div>
+      <span class="badge badge-orange font-mono">Unplanned Downtime Crisis</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
+      
+      <!-- Card 1 -->
+      <div class="kpi-stat-box space-y-4 border-l-4 border-l-rose-500">
+        <div class="text-rose-400 text-3xl">⚠️</div>
+        <h3 class="text-lg font-bold text-white">1. ความเสียหายจากการหยุดเครื่องกะทันหัน</h3>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          ตลับลูกปืน (Bearings) ชำรุดเฉียบพลัน ทำให้สายการผลิตหยุดชะงัก (Unplanned Downtime) ก่อให้เกิดความเสียหายเฉลี่ยสูงถึง <b class="text-rose-400">หลักแสนถึงหลักล้านบาทต่อชั่วโมง</b> ในโรงงานผลิต
+        </p>
+        <div class="text-xs text-slate-400 font-mono pt-2 border-t border-slate-800">
+          ปัญหา: ขาดการแจ้งเตือนล่วงหน้าที่แม่นยำ
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="kpi-stat-box space-y-4 border-l-4 border-l-amber-500">
+        <div class="text-amber-400 text-3xl">⏳</div>
+        <h3 class="text-lg font-bold text-white">2. การซ่อมบำรุงตามรอบเวลาไร้ประสิทธิภาพ</h3>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          วิธี Preventive Maintenance (PM) ดั้งเดิมซ่อมตามชั่วโมงทำงาน ทำให้เกิด <b class="text-amber-300">Over-maintenance</b> (ทิ้งอะไหล่ที่ยังดี) หรือ <b class="text-rose-300">Under-maintenance</b> (อะไหล่เสียหายก่อนถึงรอบตรวจ)
+        </p>
+        <div class="text-xs text-slate-400 font-mono pt-2 border-t border-slate-800">
+          ปัญหา: สิ้นเปลืองงบประมาณอะไหล่และค่าแรง
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="kpi-stat-box space-y-4 border-l-4 border-l-purple-500">
+        <div class="text-purple-400 text-3xl">🧠</div>
+        <h3 class="text-lg font-bold text-white">3. ขาดแคลนผู้เชี่ยวชาญ & AI Hallucination</h3>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          การอ่านกราฟ FFT ต้องใช้ผู้เชี่ยวชาญเฉพาะทาง ขณะที่โมเดล GenAI/LLM ทั่วไปไม่สามารถคำนวณอายุคงเหลือ (RUL) ได้ถูกต้อง มักเกิดอาการ <b class="text-purple-300">"AI หลอน" (Hallucination)</b> ซึ่งอันตรายต่อความปลอดภัย
+        </p>
+        <div class="text-xs text-slate-400 font-mono pt-2 border-t border-slate-800">
+          ปัญหา: Black-box AI ไม่น่าเชื่อถือในงานวิศวกรรม
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex items-center justify-between text-xs text-slate-400">
+      <span>🎯 <b>โจทย์ท้าทาย:</b> ทำอย่างไรให้ตรวจจับได้แบบเรียลไทม์ 24/7 ตัวเลข RUL เชื่อถือได้ 100% และระบบมีต้นทุนต่ำที่สุด?</span>
+      <span class="text-sky-400 font-mono font-bold">Answer: MechAgent Physics-Informed Serverless</span>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 3: AWS SOLUTION & KEY FEATURES ================= -->
+  <section class="slide" id="slide-3">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+      <div>
+        <span class="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">02 • The Innovation</span>
+        <h2 class="text-2xl font-bold text-white">AWS Solution & จุดเด่นของ MechAgent</h2>
+      </div>
+      <span class="badge badge-green font-mono">Zero Hallucination Architecture</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
+      
+      <!-- Feature 1 -->
+      <div class="kpi-stat-box flex gap-4 items-start">
+        <div class="p-3 bg-sky-950/60 border border-sky-800 rounded-xl text-sky-400 text-2xl shrink-0">🔬</div>
+        <div class="space-y-1.5">
+          <h3 class="text-base font-bold text-white">1. Physics-Informed Multi-Task Learning (MTL) AI</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            ผสานโครงข่ายประสาทเทียม 1D-CNN Backbone ร่วมกับสูตรฟิสิกส์ Envelope Spectrum คำนวณ Order Frequencies (BPFI, BPFO, BSF, FTF) พร้อมกัน 3 มิติ: <b class="text-sky-300">ตำแหน่งชำรุด, ระดับความเสื่อม (ISO S0-S4), และอายุคงเหลือ (RUL)</b> โดยไม่ผ่าน LLM ทำให้ Zero Hallucination 100%
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="kpi-stat-box flex gap-4 items-start">
+        <div class="p-3 bg-rose-950/60 border border-rose-800 rounded-xl text-rose-400 text-2xl shrink-0">🛡️</div>
+        <div class="space-y-1.5">
+          <h3 class="text-base font-bold text-white">2. Worst-Case P05 Safety Deadline (Monte Carlo)</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            ใช้ Monte Carlo Dropout ประเมิน Epistemic Uncertainty ของตลับลูกปืน และนำค่าความเสี่ยงเลวร้ายที่สุด (<b class="text-rose-300">P05 Worst-case</b>) มากำหนดเป็นเส้นตายเปลี่ยนอะไหล่ ป้องกันเครื่องจักรล็อกเฉียบพลันในระดับความปลอดภัยสูงสุด
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="kpi-stat-box flex gap-4 items-start">
+        <div class="p-3 bg-purple-950/60 border border-purple-800 rounded-xl text-purple-400 text-2xl shrink-0">🤖</div>
+        <div class="space-y-1.5">
+          <h3 class="text-base font-bold text-white">3. Autonomous Agentic Workflow & Human-in-the-Loop</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            มี <b>Gatekeeper Filter</b> คัดกรองเคสฉุกเฉินส่งให้ <b class="text-purple-300">Amazon Bedrock (Nova Pro)</b> สรุปงานซ่อม ตรวจสอบสต็อกอะไหล่ จัดทำใบสั่งงาน (Work Order) และมีระบบอนุมัติสำหรับหัวหน้างาน (Approve / Postpone / Reject) พร้อมออก Cryptographic Verification Token
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="kpi-stat-box flex gap-4 items-start">
+        <div class="p-3 bg-emerald-950/60 border border-emerald-800 rounded-xl text-emerald-400 text-2xl shrink-0">📂</div>
+        <div class="space-y-1.5">
+          <h3 class="text-base font-bold text-white">4. รองรับทั้ง Simulation และ Real Lab Dataset</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            สามารถจำลองสัญญาณตามทฤษฎีกลศาสตร์ และรองรับการนำเข้าข้อมูลจริงจากห้องแล็บระดับโลก (<b class="text-emerald-300">CWRU .mat</b> และ <b class="text-emerald-300">XJTU-SY .csv</b>) พร้อมตัวตรวจจับความเร็วรอบ RPM และคำนวณ RMS อัตโนมัติ
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="grid grid-cols-4 gap-4 text-center text-xs font-mono">
+      <div class="p-2 rounded bg-slate-900 border border-slate-800"><span class="text-sky-400 font-bold">BPFI:</span> Inner Race Order</div>
+      <div class="p-2 rounded bg-slate-900 border border-slate-800"><span class="text-amber-400 font-bold">BPFO:</span> Outer Race Order</div>
+      <div class="p-2 rounded bg-slate-900 border border-slate-800"><span class="text-yellow-400 font-bold">BSF:</span> Ball Spin Order</div>
+      <div class="p-2 rounded bg-slate-900 border border-slate-800"><span class="text-purple-400 font-bold">FTF:</span> Cage Defect Order</div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 4: ARCHITECTURE & DATA FLOW ================= -->
+  <section class="slide" id="slide-4">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+      <div>
+        <span class="text-xs font-mono text-cyan-400 font-bold uppercase tracking-wider">03 • System Design</span>
+        <h2 class="text-2xl font-bold text-white">AWS 100% Serverless Architecture</h2>
+      </div>
+      <span class="badge badge-blue font-mono">Zero Idle Cost Infrastructure</span>
+    </div>
+
+    <div class="my-auto space-y-5">
+      
+      <!-- Visual Flow Diagram -->
+      <div class="grid grid-cols-1 md:grid-cols-6 gap-3 text-center text-xs font-mono">
+        
+        <div class="kpi-stat-box flex flex-col justify-between items-center p-3 bg-slate-900/80">
+          <span class="text-2xl">👨‍💼</span>
+          <div class="font-bold text-white mt-1">1. User Client</div>
+          <div class="text-[10px] text-slate-400">Web / IoT Vibration</div>
+        </div>
+
+        <div class="kpi-stat-box flex flex-col justify-between items-center p-3 bg-sky-950/40 border-sky-800/60">
+          <span class="text-2xl">🌐</span>
+          <div class="font-bold text-sky-300 mt-1">2. CloudFront + S3</div>
+          <div class="text-[10px] text-slate-400">Static SPA + SSL 🔒</div>
+        </div>
+
+        <div class="kpi-stat-box flex flex-col justify-between items-center p-3 bg-indigo-950/40 border-indigo-800/60">
+          <span class="text-2xl">🚪</span>
+          <div class="font-bold text-indigo-300 mt-1">3. API Gateway</div>
+          <div class="text-[10px] text-slate-400">HTTP REST Routes</div>
+        </div>
+
+        <div class="kpi-stat-box flex flex-col justify-between items-center p-3 bg-amber-950/40 border-amber-800/60">
+          <span class="text-2xl">⚡</span>
+          <div class="font-bold text-amber-300 mt-1">4. AWS Lambda</div>
+          <div class="text-[10px] text-slate-400">Orchestrator Engine</div>
+        </div>
+
+        <div class="kpi-stat-box flex flex-col justify-between items-center p-3 bg-purple-950/40 border-purple-800/60">
+          <span class="text-2xl">🧠</span>
+          <div class="font-bold text-purple-300 mt-1">5. SageMaker Serverless</div>
+          <div class="text-[10px] text-slate-400">PyTorch MTL Model</div>
+        </div>
+
+        <div class="kpi-stat-box flex flex-col justify-between items-center p-3 bg-emerald-950/40 border-emerald-800/60">
+          <span class="text-2xl">🗄️</span>
+          <div class="font-bold text-emerald-300 mt-1">6. DynamoDB + SNS</div>
+          <div class="text-[10px] text-slate-400">On-demand Audit &amp; Alerts</div>
+        </div>
+
+      </div>
+
+      <!-- Services Table Summary -->
+      <div class="kpi-stat-box p-4 text-xs">
+        <h3 class="font-bold text-slate-200 mb-2.5">ตารางแจกแจงหน้าที่ของ AWS Services ที่ใช้งานจริง (Singapore Region - ap-southeast-1)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-slate-300 leading-relaxed">
+          <div>• <b class="text-sky-400">Amazon CloudFront:</b> กระจายหน้าเว็บ HTTPS พร้อม Edge POP กรุงเทพฯ (`BKK50-P3`) ไร้เลขพอร์ต</div>
+          <div>• <b class="text-indigo-400">Amazon API Gateway:</b> รับคำขอวิเคราะห์สัญญาณ พร้อม Auto-scaling อัตโนมัติ</div>
+          <div>• <b class="text-amber-400">AWS Lambda:</b> คัดแยกสัญญาณ คำนวณ Envelope FFT, สรุปผลรายงาน และสร้างใบสั่งงาน</div>
+          <div>• <b class="text-purple-400">Amazon SageMaker Serverless:</b> Inference โมเดล Deep Learning โดยไม่คิดค่าเครื่องตอนว่าง (Scale-to-zero)</div>
+          <div>• <b class="text-emerald-400">Amazon DynamoDB:</b> บันทึกสถานะงานแบบ Real-time ด้วยโหมด Pay-per-request On-Demand</div>
+          <div>• <b class="text-rose-400">Amazon Bedrock (Nova Pro):</b> ให้คำแนะนำช่างซ่อมบำรุงเฉพาะทางด้วย LLM ชั้นนำ</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="border-t border-slate-800 pt-3 flex justify-between text-xs text-slate-500 font-mono">
+      <span>Security: Enterprise HTTPS • IAM Principle of Least Privilege</span>
+      <span>Reliability: Multi-AZ Fault Tolerant • Zero Single Point of Failure</span>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 5: PRICING ESTIMATION & OPTIMIZATION ================= -->
+  <section class="slide" id="slide-5">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+      <div>
+        <span class="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">04 • Cost Efficiency</span>
+        <h2 class="text-2xl font-bold text-white">AWS Pricing Estimation &amp; งบประมาณโครงการ</h2>
+      </div>
+      <span class="badge badge-green font-mono">งบจริง &lt; 1% ของเพดาน $350</span>
+    </div>
+
+    <div class="my-auto space-y-4">
+      
+      <!-- Cost Table -->
+      <div class="overflow-x-auto rounded-xl border border-slate-800">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-900/90 text-slate-300 border-b border-slate-800">
+              <th class="p-3">AWS Service</th>
+              <th class="p-3">สมมติฐานการใช้งานต่อเดือน (30,000 Inferences)</th>
+              <th class="p-3">โมเดลการคิดเงิน</th>
+              <th class="p-3 text-right">ค่าบริการ / เดือน (USD)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60 text-slate-300 font-mono">
+            <tr>
+              <td class="p-2.5 font-bold text-sky-400">Amazon CloudFront</td>
+              <td class="p-2.5">Data Transfer Out ~2 GB, 50,000 Requests</td>
+              <td class="p-2.5">Free Tier 1 TB/เดือน</td>
+              <td class="p-2.5 text-right font-bold text-emerald-400">$0.00</td>
+            </tr>
+            <tr>
+              <td class="p-2.5 font-bold text-indigo-400">Amazon S3</td>
+              <td class="p-2.5">จัดเก็บ Static Web + Raw Data รวม 10 GB</td>
+              <td class="p-2.5">$0.025 ต่อ GB-เดือน</td>
+              <td class="p-2.5 text-right font-bold text-slate-200">$0.25</td>
+            </tr>
+            <tr>
+              <td class="p-2.5 font-bold text-amber-400">Amazon API Gateway</td>
+              <td class="p-2.5">HTTP API จำนวน 60,000 Requests</td>
+              <td class="p-2.5">$1.00 ต่อ 1 ล้าน Requests</td>
+              <td class="p-2.5 text-right font-bold text-slate-200">$0.06</td>
+            </tr>
+            <tr>
+              <td class="p-2.5 font-bold text-rose-400">AWS Lambda</td>
+              <td class="p-2.5">60,000 Invocations (เฉลี่ย 400ms @ 512MB)</td>
+              <td class="p-2.5">Free Tier 1 ล้าน Invocations</td>
+              <td class="p-2.5 text-right font-bold text-emerald-400">$0.00</td>
+            </tr>
+            <tr>
+              <td class="p-2.5 font-bold text-purple-400">SageMaker Serverless</td>
+              <td class="p-2.5">30,000 Inferences (เฉลี่ย 350ms @ 3072MB)</td>
+              <td class="p-2.5">$0.000036 ต่อ GB-วินาที</td>
+              <td class="p-2.5 text-right font-bold text-slate-200">$1.13</td>
+            </tr>
+            <tr>
+              <td class="p-2.5 font-bold text-cyan-400">Amazon DynamoDB</td>
+              <td class="p-2.5">30,000 Writes / 60,000 Reads (On-Demand)</td>
+              <td class="p-2.5">Free Tier 25 GB Storage</td>
+              <td class="p-2.5 text-right font-bold text-emerald-400">$0.00</td>
+            </tr>
+            <tr>
+              <td class="p-2.5 font-bold text-blue-400">Amazon Bedrock (Nova)</td>
+              <td class="p-2.5">1,500 Alerts (กรองผ่าน Gatekeeper 5%)</td>
+              <td class="p-2.5">On-demand Tokens</td>
+              <td class="p-2.5 text-right font-bold text-slate-200">$0.95</td>
+            </tr>
+            <tr class="bg-slate-900/80 font-bold">
+              <td colspan="3" class="p-3 text-right text-slate-200 font-sans">รวมค่าใช้จ่ายทั้งระบบบน AWS ap-southeast-1:</td>
+              <td class="p-3 text-right text-emerald-400 text-sm">~$2.39 / เดือน</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Comparison with Hackathon Budget -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
+        <div class="kpi-stat-box">
+          <div class="text-slate-400">Hackathon Allowed Budget</div>
+          <div class="text-lg font-bold text-slate-200">$350.00 USD</div>
+        </div>
+        <div class="kpi-stat-box border-emerald-800/60 bg-emerald-950/20">
+          <div class="text-emerald-400">MechAgent Real Cost</div>
+          <div class="text-lg font-bold text-emerald-300">~$2.39 USD (~85 บาท)</div>
+        </div>
+        <div class="kpi-stat-box border-cyan-800/60 bg-cyan-950/20">
+          <div class="text-cyan-400">Budget Remaining</div>
+          <div class="text-lg font-bold text-cyan-300">&gt; 99.3% ของงบประมาณ</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="border-t border-slate-800 pt-3 flex justify-between text-xs text-slate-500 font-mono">
+      <span>Zero Idle Cost • Pay strictly when rotary machine vibration is sampled</span>
+      <span>Calculated for 50 industrial machines sampling 20 times/day</span>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 6: BEFORE VS. AFTER ================= -->
+  <section class="slide" id="slide-6">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+      <div>
+        <span class="text-xs font-mono text-purple-400 font-bold uppercase tracking-wider">05 • Architecture Evolution</span>
+        <h2 class="text-2xl font-bold text-white">Before vs. After: ก้าวกระโดดสู่ Serverless</h2>
+      </div>
+      <span class="badge badge-purple font-mono">Transformation Matrix</span>
+    </div>
+
+    <div class="my-auto overflow-x-auto rounded-xl border border-slate-800">
+      <table class="w-full text-left text-xs border-collapse">
+        <thead>
+          <tr class="bg-slate-900/90 border-b border-slate-800 text-slate-300">
+            <th class="p-3.5 w-1/4">มิติการเปรียบเทียบ</th>
+            <th class="p-3.5 w-3/8 text-rose-400 font-bold">🔴 สถาปัตยกรรมเดิม (Traditional EC2 Server)</th>
+            <th class="p-3.5 w-3/8 text-emerald-400 font-bold">🟢 สถาปัตยกรรมใหม่ (100% Serverless First)</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-800/70 text-slate-300 leading-relaxed">
+          <tr>
+            <td class="p-3 font-bold text-white">1. ค่าใช้จ่ายขณะไม่มีโหลด (Idle Cost)</td>
+            <td class="p-3 text-rose-300/90">
+              💸 เสียเงินตลอด 24 ชม. แม้โรงงานจะหยุดทำงาน (EC2 t3.small ~$22/เดือน + EBS)
+            </td>
+            <td class="p-3 text-emerald-300/90 font-semibold">
+              🟢 $0.00 (Zero Idle Cost) ไม่มีการสั่นสะเทือนส่งเข้ามา = ไม่เสียเงินแม้แต่บาทเดียว
+            </td>
+          </tr>
+          <tr>
+            <td class="p-3 font-bold text-white">2. การรองรับผู้ใช้งาน (Scalability)</td>
+            <td class="p-3 text-rose-300/90">
+              ⚠️ ติดคอขวดที่ขนาด RAM/CPU ของเครื่องเดี่ยว เกิดปัญหา Crash เมื่อมีโหลดเข้าพร้อมกัน
+            </td>
+            <td class="p-3 text-emerald-300/90 font-semibold">
+              🟢 Auto-scaling อัตโนมัติในเสี้ยววินาที รองรับเครื่องจักรพร้อมกันหลักหมื่นเครื่อง
+            </td>
+          </tr>
+          <tr>
+            <td class="p-3 font-bold text-white">3. ความพร้อมใช้งาน (High Availability)</td>
+            <td class="p-3 text-rose-300/90">
+              ⚠️ Single Point of Failure (SPOF) หาก OS แฮงก์ หรือ VM ดับ ระบบจะล่มทันที
+            </td>
+            <td class="p-3 text-emerald-300/90 font-semibold">
+              🟢 Multi-AZ Fault Tolerant สถาปัตยกรรมกระจายตัวบนหลายศูนย์ข้อมูล อัตโนมัติ 99.99%
+            </td>
+          </tr>
+          <tr>
+            <td class="p-3 font-bold text-white">4. ความปลอดภัย &amp; โดเมน (Security &amp; SSL)</td>
+            <td class="p-3 text-rose-300/90">
+              ⚠️ เรียกผ่านหมายเลข IP ตรงๆ พร้อมพอร์ตแปลกปลอม :8501 ขึ้นเตือน `Not secure`
+            </td>
+            <td class="p-3 text-emerald-300/90 font-semibold">
+              🟢 HTTPS แม่กุญแจเขียว 🔒 ผ่าน CloudFront CDN มาตรฐาน Enterprise ปิดพอร์ตเสี่ยง
+            </td>
+          </tr>
+          <tr>
+            <td class="p-3 font-bold text-white">5. ภาระการดูแลระบบ (Maintenance Overhead)</td>
+            <td class="p-3 text-rose-300/90">
+              ⚠️ ต้องคอยอัปเดต Linux Kernel, Patch OS, ซ่อมแซม Driver และแพ็กเกจ
+            </td>
+            <td class="p-3 text-emerald-300/90 font-semibold">
+              🟢 NoOps ไร้ภาระดูแลเซิร์ฟเวอร์ วิศวกรทุ่มเทเวลาให้กับการพัฒนาโมเดล AI ได้ 100%
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="border-t border-slate-800 pt-3 flex justify-between text-xs text-slate-500 font-mono">
+      <span>Cost Reduction: &gt; 90%</span>
+      <span>Deployment Flexibility: CloudFormation &amp; SAM Declarative Code</span>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 7: BUSINESS IMPACT & CONCLUSION ================= -->
+  <section class="slide" id="slide-7">
+    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+      <div>
+        <span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider">06 • Conclusion &amp; Value</span>
+        <h2 class="text-2xl font-bold text-white">คุณค่าทางธุรกิจ &amp; สรุปผลงาน (Business Value)</h2>
+      </div>
+      <span class="badge badge-blue font-mono">Enterprise Ready</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-auto">
+      
+      <!-- Value 1 -->
+      <div class="kpi-stat-box space-y-3 border-t-4 border-t-sky-500">
+        <div class="text-sky-400 text-3xl font-extrabold">01</div>
+        <h3 class="text-base font-bold text-white">ROI คุ้มค่าสูงสุด</h3>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          ลดความเสี่ยงการเกิด Unplanned Downtime ที่สร้างความเสียหายชั่วโมงละหลายแสนบาท ด้วยต้นทุนระบบคลาวด์บน AWS เพียงเดือนละ <b class="text-emerald-300">~85 บาท ($2.39)</b> คืนทุนทันทีตั้งแต่ป้องกันความเสียหายได้ครั้งแรก
+        </p>
+      </div>
+
+      <!-- Value 2 -->
+      <div class="kpi-stat-box space-y-3 border-t-4 border-t-emerald-500">
+        <div class="text-emerald-400 text-3xl font-extrabold">02</div>
+        <h3 class="text-base font-bold text-white">Explainable &amp; Trustworthy AI</h3>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          หมดปัญหา AI ปลอมหรือ AI หลอนด้วยการใช้ <b class="text-sky-300">Physics Order Harmonic Verification</b> ยืนยันตำแหน่งความเสียหายทางกลศาสตร์ร่วมกับโครงข่ายประสาทเทียม ทำให้วิศวกรโรงงานยอมรับและกล้าตัดสินใจ
+        </p>
+      </div>
+
+      <!-- Value 3 -->
+      <div class="kpi-stat-box space-y-3 border-t-4 border-t-purple-500">
+        <div class="text-purple-400 text-3xl font-extrabold">03</div>
+        <h3 class="text-base font-bold text-white">Scalable to 10,000+ Assets</h3>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          สถาปัตยกรรม Serverless First บน AWS ทำให้สามารถขยายขอบเขตจากโรงงานต้นแบบ 1 โรง ไปสู่โรงงานอุตสาหกรรมในเครือทั่วประเทศได้ทันที โดยไม่ต้องแก้ไขโค้ดหรือจัดซื้อฮาร์ดแวร์เซิร์ฟเวอร์เพิ่มเติม
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Live System Banner -->
+    <div class="bg-gradient-to-r from-sky-950/60 via-slate-900 to-indigo-950/60 border border-sky-800/60 rounded-xl p-5 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="space-y-1">
+        <div class="text-xs font-mono text-cyan-400 font-bold uppercase tracking-wider">🌟 LIVE DEMONSTRATION &amp; CODEBASE</div>
+        <div class="text-base font-bold text-white">ระบบเปิดใช้งานจริงบน AWS Cloud แล้ว พร้อมให้คณะกรรมการทดสอบ</div>
+        <div class="text-xs text-slate-300 font-mono">CloudFront HTTPS: https://d38e5nijdx3gmh.cloudfront.net</div>
+      </div>
+      <div class="flex gap-3">
+        <a href="https://d38e5nijdx3gmh.cloudfront.net" target="_blank" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs shadow-lg flex items-center gap-2 transition">
+          <span>🚀</span>
+          <span>เปิดระบบ MechAgent Live</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="border-t border-slate-800 pt-3 flex justify-between text-xs text-slate-500 font-mono">
+      <span>NTT DATA Hackathon 2026 Presentation</span>
+      <span>Thank you for your attention &amp; support!</span>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE NAVIGATION SCRIPT ================= -->
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 7;
+
+    function updateSlideIndicator() {
+      document.getElementById('slide-num').innerText = `Slide ${currentSlide}`;
+    }
+
+    function scrollToSlide(slideIndex) {
+      if (slideIndex < 1) slideIndex = 1;
+      if (slideIndex > totalSlides) slideIndex = totalSlides;
+      currentSlide = slideIndex;
+      const el = document.getElementById(`slide-${currentSlide}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+      updateSlideIndicator();
+    }
+
+    function nextSlide() {
+      scrollToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      scrollToSlide(currentSlide - 1);
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      }
+    });
+
+    // Intersection observer to track active slide on manual scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const num = parseInt(id.replace('slide-', ''));
+          if (!isNaN(num)) {
+            currentSlide = num;
+            updateSlideIndicator();
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.slide').forEach(s => observer.observe(s));
+  </script>
+</body>
+</html>
